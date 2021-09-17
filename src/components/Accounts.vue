@@ -218,13 +218,13 @@ export default defineComponent({
     },
   },
   setup() {
-    const sickle: Contract = inject('sickle') as Contract
-    const polyblades: Contract = inject('polyblades') as Contract
+    const folk: Contract = inject('folk') as Contract
+    const folkwarriors: Contract = inject('folkwarriors') as Contract
     const character: Contract = inject('character') as Contract
     const weapon: Contract = inject('weapon') as Contract
     const maxTax = ref(0)
     const web3 = inject('web3') as Web3
-    const polybladesWS: Contract = inject('polybladesWS') as Contract
+    const folkwarriorsWS: Contract = inject('folkwarriorsWS') as Contract
 
     onBeforeUnmount(async () => {
       accounts.value.forEach(async (a) => {
@@ -240,10 +240,10 @@ export default defineComponent({
     const accountHeaders = [
       { text: 'Address', value: 'address' },
       { text: 'Name', value: 'name' },
-      { text: 'Wallet Sickle', value: 'walletSickle' },
-      { text: 'Wallet Matic', value: 'walletMatic' },
-      { text: 'Unclaimed Sickle', value: 'unclaimedSickle' },
-      { text: 'Total Sickle', value: 'totalSickle' },
+      { text: 'Wallet Folk', value: 'walletFolk' },
+      { text: 'Wallet BNB', value: 'walletBNB' },
+      { text: 'Unclaimed Folk', value: 'unclaimedFolk' },
+      { text: 'Total Folk', value: 'totalFolk' },
       { text: 'Tax', value: 'tax' },
       { text: 'Action', value: 'action' },
     ]
@@ -304,7 +304,7 @@ export default defineComponent({
     }
 
     async function init() {
-      maxTax.value = await polyblades.methods.REWARDS_CLAIM_TAX_MAX().call()
+      maxTax.value = await folkwarriors.methods.REWARDS_CLAIM_TAX_MAX().call()
       fetchAccounts()
     }
 
@@ -319,41 +319,39 @@ export default defineComponent({
 
     async function fetchAccount(item: any, index: number | null = null) {
       try {
-        let walletSickle = Number(
-          await sickle.methods.balanceOf(item.address).call()
+        let walletFolk = Number(
+          await folk.methods.balanceOf(item.address).call()
         )
-        walletSickle = Number(
+        walletFolk = Number(
           parseFloat(
-            web3.utils.fromWei(BigInt(walletSickle).toString(), 'ether')
+            web3.utils.fromWei(BigInt(walletFolk).toString(), 'ether')
           ).toFixed(4)
         )
-        item.walletSickle = walletSickle
+        item.walletFolk = walletFolk
 
-        let walletMatic = Number(await web3.eth.getBalance(item.address))
-        walletMatic = Number(
+        let walletBNB = Number(await web3.eth.getBalance(item.address))
+        walletBNB = Number(
           parseFloat(
-            web3.utils.fromWei(BigInt(walletMatic).toString(), 'ether')
+            web3.utils.fromWei(BigInt(walletBNB).toString(), 'ether')
           ).toFixed(4)
         )
-        item.walletMatic = walletMatic
+        item.walletBNB = walletBNB
 
-        let unclaimedSickle = await polyblades.methods
+        let unclaimedFolk = await folkwarriors.methods
           .getTokenRewards()
           .call({ from: item.address })
 
-        unclaimedSickle = Number(
+        unclaimedFolk = Number(
           parseFloat(
-            web3.utils.fromWei(BigInt(unclaimedSickle).toString(), 'ether')
+            web3.utils.fromWei(BigInt(unclaimedFolk).toString(), 'ether')
           ).toFixed(4)
         )
 
-        item.unclaimedSickle = unclaimedSickle
+        item.unclaimedFolk = unclaimedFolk
 
-        item.totalSickle = (
-          Number(walletSickle) + Number(unclaimedSickle)
-        ).toFixed(4)
+        item.totalFolk = (Number(walletFolk) + Number(unclaimedFolk)).toFixed(4)
 
-        const tax = await polyblades.methods
+        const tax = await folkwarriors.methods
           .getOwnRewardsClaimTax()
           .call({ from: item.address })
 
@@ -372,14 +370,14 @@ export default defineComponent({
     }
 
     async function getCharacters(address: string) {
-      const charIds: number[] = await polyblades.methods
+      const charIds: number[] = await folkwarriors.methods
         .getMyCharacters()
         .call({ from: address })
       const chars = await Promise.all(
         charIds.map(async (charId, index) => {
           const c = await character.methods.get(charId).call()
           const charData = characterFromContract(charId, c)
-          const exp = await polyblades.methods.getXpRewards(charId).call()
+          const exp = await folkwarriors.methods.getXpRewards(charId).call()
           const sta = await character.methods.getStaminaPoints(charId).call()
           return {
             ...charData,
@@ -396,7 +394,7 @@ export default defineComponent({
     }
 
     async function getWeapons(address: string) {
-      const weapIds: any[] = await polyblades.methods
+      const weapIds: any[] = await folkwarriors.methods
         .getMyWeapons()
         .call({ from: address })
       const weapons = await Promise.all(
@@ -538,9 +536,9 @@ export default defineComponent({
         case 1:
           return 'Ice'
         case 2:
-          return 'Lightning'
+          return 'Wind'
         case 3:
-          return 'Dark'
+          return 'Water'
         default:
           return ''
       }
@@ -593,9 +591,9 @@ export default defineComponent({
           return 'fire-icon'
         case 'Ice':
           return 'earth-icon'
-        case 'Lightning':
-          return 'lightning-icon'
-        case 'Dark':
+        case 'Wind':
+          return 'wind-icon'
+        case 'Water':
           return 'water-icon'
         default:
           return ''
@@ -630,7 +628,7 @@ export default defineComponent({
         const charData = characterFromContract(selectedChar.id, c)
         const w = await weapon.methods.get(weaponId).call()
         const weaponData: any = weaponFromContract(weaponId, w)
-        const targets = await polyblades.methods
+        const targets = await folkwarriors.methods
           .getTargets(selectedChar.id, weaponId)
           .call()
         const enemies = await getEnemyDetails(targets)
@@ -796,7 +794,7 @@ export default defineComponent({
       const opts = {
         topics: [null, encodedAddress],
       }
-      const subscription = polybladesWS.events
+      const subscription = folkwarriorsWS.events
         .FightOutcome(opts)
         .on('data', (event: any) => {
           const { owner } = event.returnValues
@@ -884,9 +882,9 @@ export default defineComponent({
   width: 2em;
   height: 2em;
 }
-.lightning-icon {
+.wind-icon {
   color: #055050;
-  content: url(../assets/lightning.png);
+  content: url(../assets/wind.png);
   width: 2em;
   height: 2em;
 }

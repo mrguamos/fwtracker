@@ -2,31 +2,31 @@
   <div>
     <v-row justify="center">
       <v-col cols="6" sm="6" md="3">
-        <Card :content="totalSickle" :title="'Total Sickle'" />
+        <Card :content="totalFolk" :title="'Total Folk'" />
       </v-col>
       <v-col cols="6" sm="6" md="3">
-        <Card :content="walletSickle" :title="'Total Sickle in Wallet'" />
+        <Card :content="walletFolk" :title="'Total Folk in Wallet'" />
       </v-col>
       <v-col cols="6" sm="6" md="3">
-        <Card :content="totalUnclaimedSickle" :title="'Total Unclaimed'" />
+        <Card :content="totalUnclaimedFolk" :title="'Total Unclaimed'" />
       </v-col>
 
       <v-col cols="6" sm="6" md="3">
-        <Card :content="totalMatic" :title="'Total Matic'" />
+        <Card :content="totalBNB" :title="'Total BNB'" />
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="6" sm="6" md="3">
-        <Card :content="`$${totalSickelUSD}`" :title="'Total Sickle / USD'" />
+        <Card :content="`$${totalSickelUSD}`" :title="'Total Folk / USD'" />
       </v-col>
       <v-col cols="6" sm="6" md="3">
-        <Card :content="`$${maticUSD}`" :title="'Matic / USD'" />
+        <Card :content="`$${bnbUSD}`" :title="'BNB / USD'" />
       </v-col>
       <v-col cols="6" sm="6" md="3">
-        <Card :content="`$${sickleUSD}`" :title="'Sickle / USD'" />
+        <Card :content="`$${folkUSD}`" :title="'Folk / USD'" />
       </v-col>
       <v-col cols="6" sm="6" md="3">
-        <Card :content="`$${totalMaticUSD}`" :title="'Total Matic / USD'" />
+        <Card :content="`$${totalBNBUSD}`" :title="'Total BNB / USD'" />
       </v-col>
     </v-row>
   </div>
@@ -42,93 +42,91 @@ export default defineComponent({
   components: { Card },
   setup() {
     const { accounts } = useAccounts()
-    const walletSickle = computed(() => {
+    const walletFolk = computed(() => {
       let total = 0
       accounts.value.map((item) => {
-        if (!isNaN(item.walletSickle)) {
-          total = total + item.walletSickle
+        if (!isNaN(item.walletFolk)) {
+          total = total + item.walletFolk
         }
       })
       return `${total.toFixed(4)}`
     })
-    const totalSickle = computed(() =>
-      (Number(totalUnclaimedSickle.value) + Number(walletSickle.value)).toFixed(
-        4
-      )
+    const totalFolk = computed(() =>
+      (Number(totalUnclaimedFolk.value) + Number(walletFolk.value)).toFixed(4)
     )
-    const totalUnclaimedSickle = computed(() => {
+    const totalUnclaimedFolk = computed(() => {
       let total = 0
       accounts.value.map((item) => {
-        if (!isNaN(item.unclaimedSickle)) {
-          total = total + item.unclaimedSickle
+        if (!isNaN(item.unclaimedFolk)) {
+          total = total + item.unclaimedFolk
         }
       })
       return `${total.toFixed(4)}`
     })
-    const totalMatic = computed(() => {
+    const totalBNB = computed(() => {
       let total = 0
       accounts.value.map((item) => {
-        if (!isNaN(item.walletMatic)) {
-          total = total + item.walletMatic
+        if (!isNaN(item.walletBNB)) {
+          total = total + item.walletBNB
         }
       })
       return `${total.toFixed(4)}`
     })
 
     const totalSickelUSD = computed(() => {
-      return (Number(totalSickle.value) * Number(sickleUSD.value)).toFixed(4)
+      return (Number(totalFolk.value) * Number(folkUSD.value)).toFixed(4)
     })
 
-    const totalMaticUSD = computed(() => {
-      return (Number(totalMatic.value) * Number(maticUSD.value)).toFixed(4)
+    const totalBNBUSD = computed(() => {
+      return (Number(totalBNB.value) * Number(bnbUSD.value)).toFixed(4)
     })
 
-    const sickleUSD = ref('0')
-    const maticUSD = ref('0')
+    const folkUSD = ref('0')
+    const bnbUSD = ref('0')
 
-    async function getSickleUSD() {
+    async function getFolkUSD() {
       try {
         const response = await axios.get(
-          'https://api.1inch.exchange/v3.0/137/quote?fromTokenAddress=0x2df507f3a084c3e053d57ef418802f56cc1b7cf8&toTokenAddress=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&amount=1000000000000000000'
+          'https://api.1inch.exchange/v3.0/56/quote?fromTokenAddress=0x492793a9ed1ac780cbd6b56c930461bc3c568f47&toTokenAddress=0x55d398326f99059ff775485246999027b3197955&amount=1000000000000000000'
         )
         let value: number = response.data.toTokenAmount
-        value /= Math.pow(10, 6)
-        sickleUSD.value = value.toFixed(4)
+        value /= Math.pow(10, 18)
+        folkUSD.value = value.toFixed(4)
       } catch (error) {
         console.log(error)
       } finally {
-        setTimeout(getSickleUSD, 5000)
+        setTimeout(getFolkUSD, 5000)
       }
     }
 
-    getSickleUSD()
+    getFolkUSD()
 
-    async function getMaticUSD() {
+    async function getBNBUSD() {
       try {
         const response = await axios.get(
-          'https://api.1inch.exchange/v3.0/137/quote?fromTokenAddress=0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270&toTokenAddress=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&amount=1000000000000000000'
+          'https://api.1inch.exchange/v3.0/56/quote?fromTokenAddress=0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c&toTokenAddress=0x55d398326f99059ff775485246999027b3197955&amount=1000000000000000000'
         )
         let value: number = response.data.toTokenAmount
-        value /= Math.pow(10, 6)
-        maticUSD.value = value.toFixed(4)
+        value /= Math.pow(10, 18)
+        bnbUSD.value = value.toFixed(4)
       } catch (error) {
         console.log(error)
       } finally {
-        setTimeout(getMaticUSD, 5000)
+        setTimeout(getBNBUSD, 5000)
       }
     }
 
-    getMaticUSD()
+    getBNBUSD()
 
     return {
-      totalSickle,
-      totalUnclaimedSickle,
-      walletSickle,
-      totalMatic,
-      sickleUSD,
-      maticUSD,
+      totalFolk,
+      totalUnclaimedFolk,
+      walletFolk,
+      totalBNB,
+      folkUSD,
+      bnbUSD,
       totalSickelUSD,
-      totalMaticUSD,
+      totalBNBUSD,
     }
   },
 })

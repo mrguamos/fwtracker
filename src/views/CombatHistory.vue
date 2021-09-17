@@ -47,7 +47,7 @@ import {
   inject,
 } from '@vue/composition-api'
 import axios from 'axios'
-import { mainAddress, PolyBlades } from '../contracts/contracts'
+import { mainAddress, FolkWarriors } from '../contracts/contracts'
 import Web3 from 'web3'
 import { ethers } from 'ethers'
 
@@ -56,7 +56,7 @@ export default defineComponent({
     const web3 = inject('web3') as Web3
     const vm: any = getCurrentInstance()
     const combats = ref([] as any)
-    const IPolyblades = new ethers.utils.Interface(PolyBlades)
+    const IPolyblades = new ethers.utils.Interface(FolkWarriors)
     const page = ref(1)
     const pageCount = ref(100)
     const getCombatHistoryLoading = ref(false)
@@ -66,7 +66,7 @@ export default defineComponent({
       { text: 'Character', value: 'character' },
       { text: 'Enemy Roll', value: 'enemyRoll' },
       { text: 'Player Roll', value: 'playerRoll' },
-      { text: 'Sickle Gain', value: 'skillGain' },
+      { text: 'Folk Gain', value: 'skillGain' },
       { text: 'Weapon', value: 'weapon' },
       { text: 'XP Gain', value: 'xpGain' },
       { text: 'Date', value: 'date' },
@@ -76,7 +76,7 @@ export default defineComponent({
       combats.value = []
       getCombatHistoryLoading.value = true
       const response = await axios.get(
-        `https://api.polygonscan.com/api?module=account&action=txlist&address=${vm.proxy.$route.params.address}&contractaddress=${mainAddress}&sort=desc&apikey=NZ24CRNHW9PTFG91UG9NXX67YKXE3TN9R6&page=${page.value}&offset=1000`
+        `https://api.bscscan.com/api?module=account&action=txlist&address=${vm.proxy.$route.params.address}&contractaddress=${mainAddress}&sort=desc&apikey=GSX93VV72B7J252JZ6WVAM9P4CZ3BPC41N&page=${page.value}&offset=1000`
       )
       const result = response.data.result
       if (result) {

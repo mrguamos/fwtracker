@@ -6,7 +6,7 @@
           <v-img
             alt="Logo"
             contain
-            src="/img/poly.png"
+            src="/img/folk.png"
             transition="scale-transition"
             width="120"
           />
@@ -42,9 +42,9 @@ import Web3 from 'web3'
 import {
   Characters,
   charAddress,
-  sickleAddress,
+  folkAddress,
   IERC20,
-  PolyBlades,
+  FolkWarriors,
   mainAddress,
   Weapons,
   weaponAddress,
@@ -86,14 +86,17 @@ export default defineComponent({
     provide('web3', web3)
     const character = new web3.eth.Contract(Characters as any, charAddress)
     provide('character', character)
-    const sickle = new web3.eth.Contract(IERC20 as any, sickleAddress)
-    provide('sickle', sickle)
-    const polyblades = new web3.eth.Contract(PolyBlades as any, mainAddress)
-    provide('polyblades', polyblades)
+    const folk = new web3.eth.Contract(IERC20 as any, folkAddress)
+    provide('folk', folk)
+    const folkwarriors = new web3.eth.Contract(FolkWarriors as any, mainAddress)
+    provide('folkwarriors', folkwarriors)
     const weapon = new web3.eth.Contract(Weapons as any, weaponAddress)
     provide('weapon', weapon)
-    const polybladesWS = new web3ws.eth.Contract(PolyBlades as any, mainAddress)
-    provide('polybladesWS', polybladesWS)
+    const folkwarriorsWS = new web3ws.eth.Contract(
+      FolkWarriors as any,
+      mainAddress
+    )
+    provide('folkwarriorsWS', folkwarriorsWS)
     return { onRefresh, config }
   },
 })

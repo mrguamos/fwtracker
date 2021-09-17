@@ -25,7 +25,7 @@ export const rpc = 'https://bsc-dataseed1.defibit.io/'
 export const mainAddress = '0x8cfdbdb84a75cbe149c9a7c44fc911f2c33ce6a4'
 export const charAddress = '0xb868caec5a0d990106cf1359b1bbaa6f5ce80792'
 export const weaponAddress = '0xe598dcd31375e6056899cbd10560b0f757ee8f51'
-export const sickleAddress = '0x492793a9ed1ac780cbd6b56c930461bc3c568f47'
+export const folkAddress = '0x492793a9ed1ac780cbd6b56c930461bc3c568f47'
 export const shieldAddress = '0x89348341ff5d119c57f68a53f9a0a1364a94874c'
 export const rpcWS =
   'wss://speedy-nodes-nyc.moralis.io/93b743973f58e4a2f6caa839/bsc/mainnet/ws'
@@ -1567,7 +1567,7 @@ export const Characters = [
     type: 'function',
   },
 ]
-export const PolyBlades = [
+export const FolkWarriors = [
   {
     anonymous: false,
     inputs: [

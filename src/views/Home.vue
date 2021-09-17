@@ -37,10 +37,10 @@
     >
       This tracker is not affiliated with
       <a
-        href="https://polyblades.io/"
+        href="https://folkwarriors.org/"
         target="_blank"
         style="color: #26c281; font-weight: bold"
-        >PolyBlades</a
+        >FolkWarriors</a
       >. This tracker only needs your wallet address. Never give your seed / key
       phrase to anyone.
     </v-alert>
@@ -53,10 +53,10 @@
     >
       Prices are based on
       <a
-        href="https://app.1inch.io/#/137/swap/0x2dF507f3A084C3e053d57EF418802f56CC1B7CF8/USDT"
+        href="https://app.1inch.io/#/56/swap/0x492793a9ed1ac780cbd6b56c930461bc3c568f47/USDT"
         target="_blank"
         style="color: #26c281; font-weight: bold"
-        >1INCH SICKLE / USDT</a
+        >1INCH FOLK / USDT</a
       >.
     </v-alert>
     <Dashboard />
