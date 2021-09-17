@@ -112,10 +112,10 @@ export default {
 
       if (result) {
         const netId = await web3.eth.net.getId()
-        if (netId !== 137) {
+        if (netId !== 56) {
           await (window as any).ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x89' }],
+            params: [{ chainId: '0x86' }],
           })
         }
 
