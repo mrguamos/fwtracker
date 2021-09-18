@@ -368,6 +368,29 @@ export default defineComponent({
         item.unclaimedFolk = unclaimedFolk
 
         let stakedFolk = await staking.methods.balanceOf(item.address).call()
+
+        const stakeTimeStamp = await staking.methods
+          .getStakeUnlockTimeLeft()
+          .call({ from: item.address })
+
+        if (Number(stakedFolk) > 0) {
+          if (Number(stakeTimeStamp) > 0) {
+            const stakeTime = new Date(
+              new Date().getTime() + stakeTimeStamp * 1000
+            )
+
+            item.stakeTime = stakeTime.toLocaleString(undefined, {
+              month: 'numeric',
+              day: 'numeric',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            })
+          } else {
+            item.stakeTime = 'Claim Now'
+          }
+        }
+
         stakedFolk = Number(
           parseFloat(
             web3.utils.fromWei(BigInt(stakedFolk).toString(), 'ether')
@@ -380,26 +403,6 @@ export default defineComponent({
           Number(unclaimedFolk) +
           Number(stakedFolk)
         ).toFixed(4)
-
-        const stakeTimeStamp = await staking.methods
-          .getStakeUnlockTimeLeft()
-          .call({ from: item.address })
-
-        if (Number(stakeTimeStamp) > 0) {
-          const stakeTime = new Date(
-            new Date().getTime() + stakeTimeStamp * 1000
-          )
-
-          item.stakeTime = stakeTime.toLocaleString(undefined, {
-            month: 'numeric',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-          })
-        } else {
-          item.stakeTime = 'Claim Now'
-        }
 
         const tax = await folkwarriors.methods
           .getOwnRewardsClaimTax()
