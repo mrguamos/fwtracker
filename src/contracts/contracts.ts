@@ -27,6 +27,7 @@ export const charAddress = '0xb868caec5a0d990106cf1359b1bbaa6f5ce80792'
 export const weaponAddress = '0xe598dcd31375e6056899cbd10560b0f757ee8f51'
 export const folkAddress = '0x492793a9ed1ac780cbd6b56c930461bc3c568f47'
 export const shieldAddress = '0x89348341ff5d119c57f68a53f9a0a1364a94874c'
+export const stakingAddress = '0x98014aEC94b38c78A24690b5339764485Be4dF6B'
 export const rpcWS =
   'wss://speedy-nodes-nyc.moralis.io/93b743973f58e4a2f6caa839/bsc/mainnet/ws'
 

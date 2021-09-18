@@ -1,31 +1,33 @@
 <template>
   <div>
     <v-row justify="center">
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
         <Card :content="totalFolk" :title="'Total Folk'" />
       </v-col>
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
         <Card :content="walletFolk" :title="'Total Folk in Wallet'" />
       </v-col>
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
         <Card :content="totalUnclaimedFolk" :title="'Total Unclaimed'" />
       </v-col>
 
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
+        <Card :content="totalStaked" :title="'Total Staked'" />
+      </v-col>
+      <v-col cols="6" sm="6" md="4">
         <Card :content="totalBNB" :title="'Total BNB'" />
       </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col cols="6" sm="6" md="3">
-        <Card :content="`$${totalSickelUSD}`" :title="'Total Folk / USD'" />
+      <v-col cols="6" sm="6" md="4">
+        <Card :content="`$${totalFolkUSD}`" :title="'Total Folk / USD'" />
       </v-col>
-      <v-col cols="6" sm="6" md="3">
+
+      <v-col cols="6" sm="6" md="4">
         <Card :content="`$${bnbUSD}`" :title="'BNB / USD'" />
       </v-col>
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
         <Card :content="`$${folkUSD}`" :title="'Folk / USD'" />
       </v-col>
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="6" sm="6" md="4">
         <Card :content="`$${totalBNBUSD}`" :title="'Total BNB / USD'" />
       </v-col>
     </v-row>
@@ -52,13 +54,26 @@ export default defineComponent({
       return `${total.toFixed(4)}`
     })
     const totalFolk = computed(() =>
-      (Number(totalUnclaimedFolk.value) + Number(walletFolk.value)).toFixed(4)
+      (
+        Number(totalUnclaimedFolk.value) +
+        Number(walletFolk.value) +
+        Number(totalStaked.value)
+      ).toFixed(4)
     )
     const totalUnclaimedFolk = computed(() => {
       let total = 0
       accounts.value.map((item) => {
         if (!isNaN(item.unclaimedFolk)) {
           total = total + item.unclaimedFolk
+        }
+      })
+      return `${total.toFixed(4)}`
+    })
+    const totalStaked = computed(() => {
+      let total = 0
+      accounts.value.map((item) => {
+        if (!isNaN(item.stakedFolk)) {
+          total = total + item.stakedFolk
         }
       })
       return `${total.toFixed(4)}`
@@ -73,7 +88,7 @@ export default defineComponent({
       return `${total.toFixed(4)}`
     })
 
-    const totalSickelUSD = computed(() => {
+    const totalFolkUSD = computed(() => {
       return (Number(totalFolk.value) * Number(folkUSD.value)).toFixed(4)
     })
 
@@ -119,13 +134,14 @@ export default defineComponent({
     getBNBUSD()
 
     return {
+      totalStaked,
       totalFolk,
       totalUnclaimedFolk,
       walletFolk,
       totalBNB,
       folkUSD,
       bnbUSD,
-      totalSickelUSD,
+      totalFolkUSD,
       totalBNBUSD,
     }
   },

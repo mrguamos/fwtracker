@@ -50,6 +50,8 @@ import {
   weaponAddress,
   rpc,
   rpcWS,
+  IStakingRewards,
+  stakingAddress,
 } from './contracts/contracts'
 import VuePullRefresh from 'vue-pull-refresh'
 
@@ -97,6 +99,11 @@ export default defineComponent({
       mainAddress
     )
     provide('folkwarriorsWS', folkwarriorsWS)
+    const staking = new web3.eth.Contract(
+      IStakingRewards as any,
+      stakingAddress
+    )
+    provide('staking', staking)
     return { onRefresh, config }
   },
 })

@@ -46,6 +46,10 @@
           <template v-slot:[`item.address`]="{ item }">
             <div class="font-weight-bold short-address">{{ item.address }}</div>
           </template>
+          <template v-slot:[`item.stakeTime`]="{ item }">
+            <span class="font-weight-bold">{{ item.stakeTime }}</span>
+          </template>
+
           <template v-slot:[`item.action`]="{ item, index }">
             <div class="text-no-wrap">
               <v-btn
@@ -84,8 +88,13 @@
               >
                 <template v-slot:[`item.actualLevel`]="{ item }">
                   <span>{{ item.actualLevel }} </span
-                  ><span class="text-caption font-weight-bold"
-                    >({{ getNextXP(item) }} XP left)</span
+                  ><span class="font-weight-bold"
+                    >({{
+                      getNextXP(item) > 0
+                        ? getNextXP(item) + 'XP left'
+                        : 'Claim Now'
+                    }}
+                    )</span
                   >
                 </template>
                 <template v-slot:[`item.traitName`]="{ item }">
@@ -231,6 +240,7 @@ export default defineComponent({
     const maxTax = ref(0)
     const web3 = inject('web3') as Web3
     const folkwarriorsWS: Contract = inject('folkwarriorsWS') as Contract
+    const staking: Contract = inject('staking') as Contract
 
     onBeforeUnmount(async () => {
       accounts.value.forEach(async (a) => {
@@ -249,6 +259,8 @@ export default defineComponent({
       { text: 'Wallet Folk', value: 'walletFolk' },
       { text: 'Wallet BNB', value: 'walletBNB' },
       { text: 'Unclaimed Folk', value: 'unclaimedFolk' },
+      { text: 'Staked Folk', value: 'stakedFolk' },
+      { text: 'Staking Time', value: 'stakeTime' },
       { text: 'Total Folk', value: 'totalFolk' },
       { text: 'Tax', value: 'tax' },
       { text: 'Action', value: 'action' },
@@ -355,7 +367,39 @@ export default defineComponent({
 
         item.unclaimedFolk = unclaimedFolk
 
-        item.totalFolk = (Number(walletFolk) + Number(unclaimedFolk)).toFixed(4)
+        let stakedFolk = await staking.methods.balanceOf(item.address).call()
+        stakedFolk = Number(
+          parseFloat(
+            web3.utils.fromWei(BigInt(stakedFolk).toString(), 'ether')
+          ).toFixed(4)
+        )
+        item.stakedFolk = stakedFolk
+
+        item.totalFolk = (
+          Number(walletFolk) +
+          Number(unclaimedFolk) +
+          Number(stakedFolk)
+        ).toFixed(4)
+
+        const stakeTimeStamp = await staking.methods
+          .getStakeUnlockTimeLeft()
+          .call({ from: item.address })
+
+        if (Number(stakeTimeStamp) > 0) {
+          const stakeTime = new Date(
+            new Date().getTime() + stakeTimeStamp * 1000
+          )
+
+          item.stakeTime = stakeTime.toLocaleString(undefined, {
+            month: 'numeric',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+          })
+        } else {
+          item.stakeTime = 'Claim Now'
+        }
 
         const tax = await folkwarriors.methods
           .getOwnRewardsClaimTax()
