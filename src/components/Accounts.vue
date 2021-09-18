@@ -541,7 +541,7 @@ export default defineComponent({
         case 0:
           return 'Fire'
         case 1:
-          return 'Ice'
+          return 'Earth'
         case 2:
           return 'Wind'
         case 3:
@@ -596,7 +596,7 @@ export default defineComponent({
       switch (element) {
         case 'Fire':
           return 'fire-icon'
-        case 'Ice':
+        case 'Earth':
           return 'earth-icon'
         case 'Wind':
           return 'wind-icon'
