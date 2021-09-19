@@ -106,18 +106,17 @@ export default {
     const weapon: Contract = inject('weapon') as Contract
 
     async function transfer() {
-      const result = await (window as any).ethereum.request({
-        method: 'eth_requestAccounts',
-      })
+      const netId = await web3.eth.net.getId()
 
-      if (result) {
-        const netId = await web3.eth.net.getId()
-        if (netId !== 56) {
-          await (window as any).ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x38' }],
-          })
-        }
+      if (netId === 56) {
+        await (window as any).ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }],
+        })
+
+        await (window as any).ethereum.request({
+          method: 'eth_requestAccounts',
+        })
 
         try {
           let data
