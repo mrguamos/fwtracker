@@ -115,7 +115,7 @@ export default {
         if (netId !== 56) {
           await (window as any).ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x86' }],
+            params: [{ chainId: '0x38' }],
           })
         }
 
