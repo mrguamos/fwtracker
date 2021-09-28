@@ -15,14 +15,16 @@ const routes: Array<RouteConfig> = [
     name: 'Transfer',
 
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Transfer.vue'),
+      import(/* webpackChunkName: "transfer" */ '../views/Transfer.vue'),
   },
   {
     path: '/combat-history/:address',
     name: 'CombatHistory',
 
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/CombatHistory.vue'),
+      import(
+        /* webpackChunkName: "combat-history" */ '../views/CombatHistory.vue'
+      ),
   },
 ]
 
